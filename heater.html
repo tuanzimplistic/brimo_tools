@@ -168,21 +168,25 @@ function draw(data){
         if(endTime - startTime >= 500)
         {
             RPM_SCALE = 1
+            LOG_HEATER = 1
             if(data == null) return;
-            startTime = endTime
             const obj = JSON.parse(data);
-            time_axis = obj["ts"]/1000;
-            top_press = RPM_SCALE * obj["v1"];
-            ref_press = RPM_SCALE * obj["v2"];
-            press_temp.data.datasets[0].data.push(parseFloat(top_press))
-            press_temp.data.datasets[1].data.push(parseFloat(ref_press))
-            press_temp.data.labels.push(time_axis)
-            press_temp.update();
-            
-            top_press_pid = obj["v3"];
-            pid_val.data.datasets[0].data.push(parseFloat(top_press_pid))
-            pid_val.data.labels.push(time_axis)
-            pid_val.update();
+            if(obj["mid"] == LOG_HEATER)
+            {
+                startTime = endTime
+                time_axis = obj["ts"]/1000;
+                top_press = RPM_SCALE * obj["v1"];
+                ref_press = RPM_SCALE * obj["v2"];
+                press_temp.data.datasets[0].data.push(parseFloat(top_press))
+                press_temp.data.datasets[1].data.push(parseFloat(ref_press))
+                press_temp.data.labels.push(time_axis)
+                press_temp.update();
+                
+                top_press_pid = obj["v3"];
+                pid_val.data.datasets[0].data.push(parseFloat(top_press_pid))
+                pid_val.data.labels.push(time_axis)
+                pid_val.update();
+            }
         }
     }
 }
